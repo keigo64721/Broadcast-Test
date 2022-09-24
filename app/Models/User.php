@@ -48,4 +48,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Message');
     }
     
+    public function chatroom_user()
+    {
+        return $this->hasMany('App\Models\ChatroomUser');
+    }
+    
+    public function chatroom_message()
+    {
+        return $this->hasMany('App\Models\ChatroomMessage');
+    }
+    
 }

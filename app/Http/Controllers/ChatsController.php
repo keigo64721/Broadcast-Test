@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
  
 use Illuminate\Http\Request;
-use App\Message;
+use App\Models\ChatroomMessage;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageSent;
+use App\Models\Message;
+use Log;
  
 class ChatsController extends Controller
 {
@@ -16,23 +18,31 @@ class ChatsController extends Controller
  
     public function index()
     {
-        return view('post');
+        return view('post', [
+            'chatroom_id' => 1,
+        ]);
     }
  
-    public function fetchMessages()
+    public function fetchMessages(Request $request)
     {
-        return Message::with('user')->get();
+        
+        $chats = ChatroomMessage::with('user')->where('chatroom_id', $request->chatroomId)->get();
+        return $chats;
+        
     }
  
     public function sendMessage(Request $request)
     {
+        //Log::debug($request->chatroomId);
         $user = Auth::user();
- 
-        $message = $user->messages()->create([
+        $chatroomId = $request->chatroomId;
+        $message = $user->chatroom_message()->create([
+            'user_id' => $user->id,
+            'chatroom_id' => $request->chatroomId,
             'message' => $request->input('message')
         ]);
  
-        event(new MessageSent($user, $message));
+        event(new MessageSent($user, $message, $chatroomId));
  
         return ['status' => 'Message Sent!'];
     }

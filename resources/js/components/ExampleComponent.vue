@@ -1,5 +1,6 @@
 <template>
     <div>
+        <p>チャットルーム：{{ chatroomId }}</p>
         <ul>
             <li v-for="(message, key) in messages" :key="key">
                 <strong>{{ message.user.name }}</strong>
@@ -13,6 +14,11 @@
  
 <script>
 export default {
+    props: {
+        chatroomId: {
+            type: Number,    
+        },
+    },
     data() {
         return {
             text: "",
@@ -26,24 +32,31 @@ export default {
     },
     created() {
         this.fetchMessages();
-        Echo.private("chat").listen("MessageSent", e => {
+        
+        Echo.private("chat."+this.chatroomId).listen("MessageSent", e => {
             this.messages.push({
                 message: e.message.message,
-                user: e.user
+                user: e.user,
+                chatroomId: e.chatroomId
             });
         });
     },
     methods: {
-        fetchMessages() {
-            axios.get("/messages").then(response => {
+        fetchMessages(chatroomId) {
+            axios.get("/messages", { params: {chatroomId: this.chatroomId} }).then(response => {
                 this.messages = response.data;
             });
         },
-        postMessage(message) {
-            axios.post("/messages", { message: this.text }).then(response => {
+        postMessage(message,chatroomId) {
+            axios.post("/messages", { 
+                message: this.text, 
+                chatroomId: this.chatroomId ,
+            }).then(response => {
                 this.text = "";
             });
         }
     }
 };
+
+
 </script>

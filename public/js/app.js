@@ -5314,6 +5314,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    chatroomId: {
+      type: Number
+    }
+  },
   data: function data() {
     return {
       text: "",
@@ -5329,26 +5334,32 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     this.fetchMessages();
-    Echo["private"]("chat").listen("MessageSent", function (e) {
+    Echo["private"]("chat." + this.chatroomId).listen("MessageSent", function (e) {
       _this.messages.push({
         message: e.message.message,
-        user: e.user
+        user: e.user,
+        chatroomId: e.chatroomId
       });
     });
   },
   methods: {
-    fetchMessages: function fetchMessages() {
+    fetchMessages: function fetchMessages(chatroomId) {
       var _this2 = this;
 
-      axios.get("/messages").then(function (response) {
+      axios.get("/messages", {
+        params: {
+          chatroomId: this.chatroomId
+        }
+      }).then(function (response) {
         _this2.messages = response.data;
       });
     },
-    postMessage: function postMessage(message) {
+    postMessage: function postMessage(message, chatroomId) {
       var _this3 = this;
 
       axios.post("/messages", {
-        message: this.text
+        message: this.text,
+        chatroomId: this.chatroomId
       }).then(function (response) {
         _this3.text = "";
       });
@@ -5374,7 +5385,7 @@ var render = function render() {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("div", [_c("ul", _vm._l(_vm.messages, function (message, key) {
+  return _c("div", [_c("p", [_vm._v("チャットルーム：" + _vm._s(_vm.chatroomId))]), _vm._v(" "), _c("ul", _vm._l(_vm.messages, function (message, key) {
     return _c("li", {
       key: key
     }, [_c("strong", [_vm._v(_vm._s(message.user.name))]), _vm._v("\n            " + _vm._s(message.message) + "\n        ")]);
