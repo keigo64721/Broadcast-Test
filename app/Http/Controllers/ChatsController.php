@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\ChatroomMessage;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageSent;
-use App\Models\Message;
 use Log;
  
 class ChatsController extends Controller
@@ -33,7 +32,7 @@ class ChatsController extends Controller
  
     public function sendMessage(Request $request)
     {
-        //Log::debug($request->chatroomId);
+        Log::debug($request->chatroomId);
         $user = Auth::user();
         $chatroomId = $request->chatroomId;
         $message = $user->chatroom_message()->create([

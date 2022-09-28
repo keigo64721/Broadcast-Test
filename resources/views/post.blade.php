@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>チャット</title>
     <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ secure_asset('/css/chatroom.css') }}" >
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
  
