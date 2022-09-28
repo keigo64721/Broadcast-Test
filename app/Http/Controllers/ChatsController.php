@@ -33,7 +33,7 @@ class ChatsController extends Controller
  
     public function sendMessage(Request $request)
     {
-        //Log::debug($request->chatroomId);
+        Log::debug($request->chatroomId);
         $user = Auth::user();
         $chatroomId = $request->chatroomId;
         $message = $user->chatroom_message()->create([
