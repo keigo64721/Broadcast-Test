@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\ChatroomMessage;
 use Illuminate\Support\Facades\Auth;
 use App\Events\MessageSent;
-use App\Models\Message;
 use Log;
  
 class ChatsController extends Controller
